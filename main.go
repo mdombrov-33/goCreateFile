@@ -10,11 +10,8 @@ import (
 	"github.com/mdombrov-33/gocreatefile/todo"
 )
 
-func getNoteData() (string, string) {
-	title := getUserInput("Note title:")
-	content := getUserInput("Note body:")
-
-	return title, content
+type saver interface {
+	SaveToFile() error
 }
 
 func main() {
@@ -34,29 +31,38 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
+
 	todo.Display()
 
-	err = todo.SaveToFile()
+	err = saveToFile(todo)
 
 	if err != nil {
-		fmt.Println("Saving the todo failed")
 		return
 	}
-
-	fmt.Println("Saving successful!")
 
 	userNote.Display()
 
-	err = userNote.SaveToFile()
+	err = saveToFile(userNote)
 
 	if err != nil {
-		fmt.Println("Saving the note failed")
 		return
 	}
 
-	fmt.Println("Saving successful!")
 }
 
+func saveToFile(data saver) error {
+	err := data.SaveToFile()
+
+	if err != nil {
+		fmt.Println("Saving the note failed")
+		return err
+	}
+
+	fmt.Println("Saving successful!")
+	return nil
+}
+
+// get input
 func getUserInput(prompt string) string {
 	fmt.Printf("%v ", prompt)
 
@@ -72,4 +78,12 @@ func getUserInput(prompt string) string {
 	text = strings.TrimSuffix(text, "\r")
 
 	return text
+}
+
+// get note data
+func getNoteData() (string, string) {
+	title := getUserInput("Note title:")
+	content := getUserInput("Note body:")
+
+	return title, content
 }
