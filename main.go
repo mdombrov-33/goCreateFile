@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/mdombrov-33/gocreatefile/note"
+	"github.com/mdombrov-33/gocreatefile/todo"
 )
 
 func getNoteData() (string, string) {
@@ -18,6 +19,14 @@ func getNoteData() (string, string) {
 
 func main() {
 	title, content := getNoteData()
+	todoText := getUserInput("Todo text:")
+
+	todo, err := todo.New(todoText)
+
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
 	userNote, err := note.New(title, content)
 
@@ -25,13 +34,23 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
+	todo.Display()
+
+	err = todo.SaveToFile()
+
+	if err != nil {
+		fmt.Println("Saving the todo failed")
+		return
+	}
+
+	fmt.Println("Saving successful!")
 
 	userNote.Display()
 
 	err = userNote.SaveToFile()
 
 	if err != nil {
-		fmt.Println("Saving the node failed")
+		fmt.Println("Saving the note failed")
 		return
 	}
 
