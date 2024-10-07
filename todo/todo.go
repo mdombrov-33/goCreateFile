@@ -26,10 +26,10 @@ func New(content string) (Todo, error) {
 	}, nil
 }
 
-func (n Todo) SaveToFile() error {
+func (t Todo) SaveToFile() error {
 	fileName := "todo.json"
 
-	json, err := json.Marshal(n)
+	json, err := json.Marshal(t)
 
 	if err != nil {
 		return err
